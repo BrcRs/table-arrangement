@@ -12,3 +12,9 @@ def is_number(s):
     except (TypeError, ValueError):
         pass
     return False
+
+def copy_dict(some_dict):
+    new_copy = dict()
+    for k in some_dict.keys():
+        new_copy[k] = some_dict[k]
+    return new_copy

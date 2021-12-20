@@ -1,7 +1,8 @@
 from random import shuffle
-from utility import is_number
+from utility import is_number, copy_dict
 import sys
 from interpreter import load_problem
+
 
 def encode_solution(solution):
     value = [(g, solution[g]["seat"], solution[g]["value"]) for g in solution.keys()]
@@ -55,8 +56,8 @@ def neighbors(problem, solution, seat_to_guest):
     # for each neighbor it has
     for g in problem.guests.keys():
         for n in problem.topology[solution[g]]:
-            sol_copy = solution.copy()
-            s_to_g_copy = seat_to_guest.copy()
+            sol_copy = copy_dict(solution)
+            s_to_g_copy = copy_dict(seat_to_guest)
             g2 = seat_to_guest[n]
             if (g, g2) in swapped_people or (g2, g) in swapped_people:
                continue
@@ -74,8 +75,8 @@ def solve(problem):
     seat_to_guest = dict()
     sol_val = 0
     # initialize everyone to random seats
-    seats = problem.topology.keys().copy()
-    seats.shuffle()
+    seats = [k for k in problem.topology.keys()]
+    shuffle(seats)
     i = 0
     for a in problem.guests.keys():
         solution[a] = {"seat" : seats[i]}
@@ -122,6 +123,6 @@ def main():
     solution, sol_val = solve(problem)
     print(solution)
     print(sol_val)
-    
+
 if __name__ == "__main__":
     main()

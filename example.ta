@@ -1,0 +1,44 @@
+guests:
+    L Louis // Comment
+    Ma Marc
+    D Damien
+    Mo Mouna
+    Em Emilie
+    Ro Roza
+
+/* Topology of the table
+
+0  1  2
+
+3  4  5
+
+*/
+
+topology: // Unoriented graph
+    0 1
+    0 3
+    0 4
+    1 2
+    1 3
+    1 4
+    1 5
+    2 4
+    2 5
+    3 4
+    4 5
+
+constraints: // Oriented valuations
+// guest guest value
+// or guest seat value
+    L Ma -1
+    L D 1
+    L Mo 1
+    Mo Ro 1
+    Em Ro -2
+    L 1 -4
+    D 5 2
+    Ma L 1
+    Ro Mo 1
+
+problem:
+    maxmin // or maxsum

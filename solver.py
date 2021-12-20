@@ -13,25 +13,27 @@ def encode_solution(solution):
 assert encode_solution({"1" : {"seat":0, "value":100}, "2" : {"seat":5, "value":16}}) \
      == encode_solution({"2" : {"value":16, "seat":5}, "1" : {"seat":0, "value":100}})
 
-def eval_guest(problem, solution, g):
+def eval_guest(problem, solution, seat_to_guest, g):
     solution[g]["value"] = 0
+    # print("for", g)
+    # print(problem.constraints[g])
 
     # review each constraint of guest g
     for c in problem.constraints[g].keys():
+        # print("c:", c)
         # seat constraint
         seat_cond = is_number(c) and solution[g]["seat"] == c
 
         # guest constraint
         # if the guest is in neighbors
-        guest_cond = c in problem.topology[solution[g]["seat"]]
-        print("for", g)
-        print("seat_cond", seat_cond)
-        print("guest_cond", guest_cond)
-        print(problem.constraints[g])
-        print(g, "is at", solution[g]["seat"])
+        nearby_guests = [seat_to_guest[s] for s in problem.topology[solution[g]["seat"]]]
+        guest_cond = c in nearby_guests
+        # print("seat_cond", seat_cond)
+        # print("guest_cond", guest_cond)
+        # print(g, "is at", solution[g]["seat"])
         if seat_cond or guest_cond:
             solution[g]["value"] += problem.constraints[g][c]
-        print(g, "value is", solution[g]["value"])
+        # print(g, "value is", solution[g]["value"])
         assert (type(solution[g]["value"]) != type(None))
 
 def eval(problem, solution):
@@ -45,21 +47,23 @@ def eval(problem, solution):
 
 def swap(problem, g1, g2, sol, seat_to_guest):
     assert g1 != g2
-    print("swap", g1, "and", g2)
-    print("previous seat_to_guest", seat_to_guest)
+    # print("swap", g1, "and", g2)
+    # print("previous seat_to_guest", seat_to_guest)
     old_g1_seat = sol[g1]['seat']
+    # print("old_g1_seat", old_g1_seat)
+    assert seat_to_guest[old_g1_seat] == g1
 
     sol[g1]['seat'] = sol[g2]['seat']
-    eval_guest(problem, sol, g1)
-    print("map", sol[g2]['seat'], "to", g1)
+    eval_guest(problem, sol, seat_to_guest, g1)
+    # print("map", sol[g2]['seat'], "to", g1)
     seat_to_guest[sol[g2]['seat']] = g1
 
     sol[g2]['seat'] = old_g1_seat
-    eval_guest(problem, sol, g2)
+    eval_guest(problem, sol, seat_to_guest, g2)
 
-    print("map", old_g1_seat, "to", g2)
+    # print("map", old_g1_seat, "to", g2)
     seat_to_guest[old_g1_seat] = g2
-    print("now seat_to_guest", seat_to_guest)
+    # print("now seat_to_guest", seat_to_guest)
 
 def neighbors(problem, solution, seat_to_guest):
     neighs = dict()
@@ -68,15 +72,15 @@ def neighbors(problem, solution, seat_to_guest):
     # for each neighbor it has
     for g in problem.guests.keys():
         for n in problem.topology[solution[g]['seat']]:
-            print("solution[g]['seat']", solution[g]['seat'])
-            print("problem.topology[solution[g]['seat']]", problem.topology[solution[g]['seat']])
+            # print("solution[g]['seat']", solution[g]['seat'])
+            # print("problem.topology[solution[g]['seat']]", problem.topology[solution[g]['seat']])
             sol_copy = copy_dict(solution)
             s_to_g_copy = copy_dict(seat_to_guest)
             g2 = seat_to_guest[n]
-            print("seat_to_guest", seat_to_guest)
-            print("n", n)
-            print("g", g)
-            print("g2", g2)
+            # print("seat_to_guest", seat_to_guest)
+            # print("n", n)
+            # print("g", g)
+            # print("g2", g2)
             if (g, g2) in swapped_people or (g2, g) in swapped_people:
                continue
             swapped_people.append((g, g2)) 
@@ -105,7 +109,7 @@ def solve(problem):
 
     # compute values of guests
     for g in problem.guests.keys():
-        eval_guest(problem, solution, g)
+        eval_guest(problem, solution, seat_to_guest, g)
 
     # compute value of solution
     sol_val = eval(problem, solution)

@@ -22,10 +22,10 @@ def load_problem(filename):
                     line = f.readline()
                     nline += 1
                     continue
-                if line[0] != "\t":
+                if line[:4] != " "*4:
                     break
                 # parse the line with \t then blank
-                parsed_line = line.split("\t")
+                parsed_line = line.split(" "*4)
                 parsed_line = parsed_line[1].split(" ")
                 # get alias (first value) as identifier for names 
                 # (second value)
@@ -72,11 +72,11 @@ def load_problem(filename):
                     nline += 1
                     continue
 
-                if line[0] != "\t":
+                if line[:4] != " "*4:
                     break
 
                 # parse with \t then blank
-                parsed_line = line.split("\t")
+                parsed_line = line.split(" "*4)
                 parsed_line = parsed_line[1].split(" ")
                 for i in [0, 1]:
                     if not is_number(parsed_line[i]):
@@ -97,11 +97,11 @@ def load_problem(filename):
                     nline += 1
                     continue
 
-                if line[0] != "\t":
+                if line[:4] != " "*4:
                     break
 
                 # parse with \t then blank
-                parsed_line = line.split("\t")
+                parsed_line = line.split(" "*4)
                 parsed_line = parsed_line[1].split(" ")
                 # add third value to the key: second value for first value
                 # constraints
@@ -122,11 +122,11 @@ def load_problem(filename):
                     nline += 1
                     continue
 
-                if line[0] != "\t":
+                if line[:4] != " "*4:
                     break
 
                 # parse with \t then blank
-                parsed_line = line.split("\t")
+                parsed_line = line.split(" "*4)
                 parsed_line = parsed_line[1].split(" ")
                 if not parsed_line[0] in TAProblem.types:
                     raise ValueError("Unknown problem type: " + parsed_line[0])

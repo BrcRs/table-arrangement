@@ -1,5 +1,7 @@
 from random import shuffle
 from utility import is_number
+import sys
+from interpreter import load_problem
 
 def encode_solution(solution):
     value = [(g, solution[g]["seat"], solution[g]["value"]) for g in solution.keys()]
@@ -9,7 +11,7 @@ def encode_solution(solution):
     return value
 
 assert encode_solution({"1" : {"seat":0, "value":100}, "2" : {"seat":5, "value":16}}) \
-== encode_solution({"2" : {"value":16, "seat":5}}, "1" : {"seat":0, "value":100})
+     == encode_solution({"2" : {"value":16, "seat":5}, "1" : {"seat":0, "value":100}})
 
 def eval_guest(problem, solution, g):
     solution[g]["value"] = 0
@@ -113,3 +115,13 @@ def solve(problem):
         # get best value in front
         best = max(front.keys(), key=lambda k: front[k][2])
         best_value = front[best][2]
+    return solution, sol_val
+def main():
+    print(sys.argv)
+    problem = load_problem(sys.argv[1])
+    solution, sol_val = solve(problem)
+    print(solution)
+    print(sol_val)
+    
+if __name__ == "__main__":
+    main()

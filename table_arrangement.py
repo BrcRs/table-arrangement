@@ -12,7 +12,7 @@ class TAProblem:
 
     def add_guests(self, aliases: dict):
         for a in aliases.keys():
-            self.add_guest(self, aliases[a], a)
+            self.add_guest(aliases[a], a)
 
     def add_edge(self, first, second):
         if first not in self.topology.keys():

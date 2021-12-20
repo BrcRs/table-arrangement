@@ -105,16 +105,10 @@ def load_problem(filename):
                 parsed_line = parsed_line[1].split(" ")
                 # add third value to the key: second value for first value
                 # constraints
-                if parsed_line[1][0] in string.digits:
-                    guest = parsed_line[0]
-                    seat = parsed_line[1]
-                    value = float(parsed_line[2])
-                    problem.add_topo_constraint(guest, seat, value)
-                else:
-                    guest = parsed_line[0]
-                    guest2 = parsed_line[1]
-                    value = float(parsed_line[2])
-                    problem.add_guest_constraint(guest, guest2, value)
+                guest = parsed_line[0]
+                other = parsed_line[1]
+                value = float(parsed_line[2])
+                problem.add_constraint(guest, other, value)
         # if it begins with problem:
         elif line[:len("problem:")] == "problem:":
             line = f.readline()

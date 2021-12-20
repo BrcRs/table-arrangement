@@ -55,7 +55,7 @@ def neighbors(problem, solution, seat_to_guest):
     # for each guest, add each solution where it is swaped with a neighbor
     # for each neighbor it has
     for g in problem.guests.keys():
-        for n in problem.topology[solution[g]]:
+        for n in problem.topology[solution[g]['seat']]:
             sol_copy = copy_dict(solution)
             s_to_g_copy = copy_dict(seat_to_guest)
             g2 = seat_to_guest[n]

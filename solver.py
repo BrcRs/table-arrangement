@@ -15,7 +15,7 @@ assert encode_solution({"1" : {"seat":0, "value":100}, "2" : {"seat":5, "value":
      == encode_solution({"2" : {"value":16, "seat":5}, "1" : {"seat":0, "value":100}})
 
 def eval_guest(problem, solution, seat_to_guest, g):
-    print("Evalutating", g, file=open(problem.name + ".log", "a"))
+    # print("Evalutating", g, file=open(problem.name + ".log", "a"))
     prev_value = solution[g]["value"] if "value" in solution[g].keys() else 0
     solution[g]["value"] = 0
 
@@ -29,24 +29,24 @@ def eval_guest(problem, solution, seat_to_guest, g):
         nearby_guests = [seat_to_guest[s] for s in problem.topology[solution[g]["seat"]]]
         guest_cond = c in nearby_guests
         if seat_cond or guest_cond:
-            print("Adding", problem.constraints[g][c], "to", g, "'s value", file=open(problem.name + ".log", "a"))
-            print("Reason: constraint on", c, file=open(problem.name + ".log", "a"))
+            # print("Adding", problem.constraints[g][c], "to", g, "'s value", file=open(problem.name + ".log", "a"))
+            # print("Reason: constraint on", c, file=open(problem.name + ".log", "a"))
             solution[g]["value"] += problem.constraints[g][c]
         assert (type(solution[g]["value"]) != type(None))
-    print("\tvalue updated for", g, "to", solution[g]["value"], file=open(problem.name + ".log", "a"))
+    # print("\tvalue updated for", g, "to", solution[g]["value"], file=open(problem.name + ".log", "a"))
 def eval(problem, solution):
-    print("Evaluating the solution", solution, file=open(problem.name + ".log", "a"))
-    print("Function:", problem.function, file=open(problem.name + ".log", "a"))
+    # print("Evaluating the solution", solution, file=open(problem.name + ".log", "a"))
+    # print("Function:", problem.function, file=open(problem.name + ".log", "a"))
     sol_val = 0
     if problem.function == "maxmin":
         sol_val = min([solution[g]["value"] for g in problem.guests.keys()])
     elif problem.function == "maxsum":
         sol_val = sum([solution[g]["value"] for g in problem.guests.keys()])
-    print("Value of solution:", sol_val, file=open(problem.name + ".log", "a"))
+    # print("Value of solution:", sol_val, file=open(problem.name + ".log", "a"))
     return sol_val
 
 def full_eval(problem, solution):
-    print("Full evaluation of solution", solution, file=open(problem.name + ".log", "a"))
+    # print("Full evaluation of solution", solution, file=open(problem.name + ".log", "a"))
     seat_to_guest = dict()
     for k in solution.keys():
         seat_to_guest[solution[k]["seat"]] = k
@@ -59,18 +59,18 @@ def full_eval(problem, solution):
     return sol_val
 
 def swap(problem, g1, g2, sol, seat_to_guest):
-    print("swap", g1, "and", g2, file=open(problem.name + ".log", "a"))
+    # print("swap", g1, "and", g2, file=open(problem.name + ".log", "a"))
     assert g1 != g2
     old_g1_seat = sol[g1]['seat']
-    print(g1, "was at", old_g1_seat, file=open(problem.name + ".log", "a"))
+    # print(g1, "was at", old_g1_seat, file=open(problem.name + ".log", "a"))
     assert seat_to_guest[old_g1_seat] == g1
-    print(g2, "was at", sol[g2]['seat'], file=open(problem.name + ".log", "a"))
+    # print(g2, "was at", sol[g2]['seat'], file=open(problem.name + ".log", "a"))
     sol[g1]['seat'] = sol[g2]['seat']
-    print(g1, "is now at", sol[g1]['seat'], file=open(problem.name + ".log", "a"))
+    # print(g1, "is now at", sol[g1]['seat'], file=open(problem.name + ".log", "a"))
     seat_to_guest[sol[g2]['seat']] = g1
 
     sol[g2]['seat'] = old_g1_seat
-    print(g2, "is now at", old_g1_seat, file=open(problem.name + ".log", "a"))
+    # print(g2, "is now at", old_g1_seat, file=open(problem.name + ".log", "a"))
 
     seat_to_guest[old_g1_seat] = g2
 
@@ -80,17 +80,17 @@ def neighbors(problem, solution, seat_to_guest):
     swapped_people = []
     # for each guest, add each solution where it is swaped with a neighbor
     # for each neighbor it has
-    print("For each guest", file=open(problem.name + ".log", "a"))
+    # print("For each guest", file=open(problem.name + ".log", "a"))
     for g in problem.guests.keys():
-        print("Guest", g, file=open(problem.name + ".log", "a"))
-        print("For each adjacent position", file=open(problem.name + ".log", "a"))
+        # print("Guest", g, file=open(problem.name + ".log", "a"))
+        # print("For each adjacent position", file=open(problem.name + ".log", "a"))
         for n in problem.topology[solution[g]['seat']]:
-            print("Position", n, file=open(problem.name + ".log", "a"))
+            # print("Position", n, file=open(problem.name + ".log", "a"))
             sol_copy = copy_dict(solution)
             s_to_g_copy = copy_dict(seat_to_guest)
             g2 = seat_to_guest[n]
             if (g, g2) in swapped_people or (g2, g) in swapped_people:
-                print((g, g2), "already in", swapped_people, file=open(problem.name + ".log", "a"))
+                # print((g, g2), "already in", swapped_people, file=open(problem.name + ".log", "a"))
                 continue
             swapped_people.append((g, g2)) 
             # swap g and the guest at n in a copy of solution
@@ -101,16 +101,16 @@ def neighbors(problem, solution, seat_to_guest):
             neighs[sol_id] = (sol_copy, s_to_g_copy, full_eval(problem, sol_copy))
     return neighs
 
-def solve(problem):
-    f = open(problem.name + ".log", 'w')
-    print("", file=f)
-    f.close()
+def solve(problem, logfile="swap.log"):
+    # f = open(logfile, 'w')
+    # print("", file=f)
+    # f.close()
     solution = dict()
     seat_to_guest = dict()
     sol_val = 0
     # initialize everyone to random seats
     seats = [k for k in problem.topology.keys()]
-    print("Randomizing seats", file=open(problem.name + ".log", "a"))
+    # print("Randomizing seats", file=open(logfile, "a"))
     shuffle(seats)
     i = 0
     for a in problem.guests.keys():
@@ -119,26 +119,26 @@ def solve(problem):
         i += 1
 
     # compute values of guests
-    print("initial value computing", file=open(problem.name + ".log", "a"))
+    # print("initial value computing", file=open(logfile, "a"))
     for g in problem.guests.keys():
         eval_guest(problem, solution, seat_to_guest, g)
-    print("end initial value computing", file=open(problem.name + ".log", "a"))
+    # print("end initial value computing", file=open(logfile, "a"))
     # compute value of solution
     sol_val = eval(problem, solution)
 
     # then add to the front every neighboring instance
     # compute the score of every neighboring instance
     front = neighbors(problem, solution, seat_to_guest)
-    print("Initial front of size", len(front),":", front, file=open(problem.name + ".log", "a"))
+    # print("Initial front of size", len(front),":", front, file=open(logfile, "a"))
     # init done, start loop
 
     # get best value in neighbors
     best = max(front.keys(), key=lambda k: front[k][2])
     best_value = front[best][2]
-    print("best value found in front:", best_value, file=open(problem.name + ".log", "a"))
+    # print("best value found in front:", best_value, file=open(logfile, "a"))
     # if there is no best one, return current solution
     while best_value > sol_val:
-        print("best value is better, exploring new node", file=open(problem.name + ".log", "a"))
+        # print("best value is better, exploring new node", file=open(logfile, "a"))
         # go to the best one found
         solution, seat_to_guest, sol_val = front[best]
         
@@ -155,11 +155,11 @@ def solve(problem):
         # get best value in front
         best = max(front.keys(), key=lambda k: front[k][2])
         best_value = front[best][2]
-        print("best value found in front:", best_value, file=open(problem.name + ".log", "a"))
+        # print("best value found in front:", best_value, file=open(logfile, "a"))
 
     return solution, sol_val
 
-def solve_bruteforce(problem):
+def solve_bruteforce(problem, logfile="bruteforce.log"):
     best = dict()
     best_val = None
     seats = [k for k in problem.topology.keys()]
@@ -191,13 +191,13 @@ def main():
     problem = load_problem(sys.argv[1])
 
     print("Swap method")
-    solution, sol_val = solve(problem)
+    solution, sol_val = solve(problem, logfile="swap_" + sys.argv[1] + ".log")
     print(solution)
     print(sol_val)
     assert full_eval(problem, solution) == sol_val, str(full_eval(problem, solution)) + " != " + str(sol_val)
 
     print("Brute force")
-    brute_sol, brute_val = solve_bruteforce(problem)
+    brute_sol, brute_val = solve_bruteforce(problem, logfile="bruteforce_" + sys.argv[1] + ".log")
     print(brute_sol)
     print(brute_val)
     assert full_eval(problem, brute_sol) == brute_val, str(full_eval(problem, brute_sol)) + " != " + str(brute_val)

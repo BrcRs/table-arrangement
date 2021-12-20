@@ -33,7 +33,10 @@ def load_problem(filename):
                 # make sure it doesn't begin with a number
                 if k[0] in string.digits:
                     raise SyntaxError("Guests names can't begin with a number")
-                aliases[k] = parsed_line[1].replace("\n", "")
+                if len(parsed_line) <= 1:
+                    aliases[k] = k
+                else:
+                    aliases[k] = parsed_line[1].replace("\n", "")
                 
                 # check for syntax errors
                 

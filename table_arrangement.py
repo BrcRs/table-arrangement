@@ -1,8 +1,10 @@
 class TAProblem:
+    types = ["maxmin", "maxsum"]
     def __init__(self):
         self.guests = dict()
         self.topology = dict()
         self.constraints = dict()
+        self.function = ""
 
     def add_guest(self, name, alias):
         self.guests[alias] = name
@@ -25,3 +27,6 @@ class TAProblem:
     def add_constraint(self, guest, other, value):
         # other could be a seat or a guest
         self.constraints[guest][other] = value
+
+    def set_opt_function(self, fun):
+        self.function = fun

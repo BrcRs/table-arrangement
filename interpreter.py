@@ -1,6 +1,8 @@
 from table_arrangement import TAProblem
 import string
 def load_problem(filename):
+    if filename[-3:] != ".ta":
+        raise NameError("The file is not a .ta file")
     f = open(filename, "r")
     problem = TAProblem()
     aliases = dict()

@@ -11,7 +11,7 @@ def encode_solution(solution):
 assert encode_solution({"1" : {"seat":0, "value":100}, "2" : {"seat":5, "value":16}}) \
 == encode_solution({"2" : {"value":16, "seat":5}}, "1" : {"seat":0, "value":100})
 
-def eval_guest(problem, solution, g)
+def eval_guest(problem, solution, g):
     solution[g]["value"] = 0
 
     # review each constraint of guest g
@@ -90,6 +90,26 @@ def solve(problem):
     # then add to the front every neighboring instance
     # compute the score of every neighboring instance
     front = neighbors(problem, solution, seat_to_guest)
-    # go to the best one found
-    # repeat
+    # init done, start loop
+
+    # get best value in neighbors
+    best = max(front.keys(), key=lambda k: front[k][2])
+    best_value = front[best][2]
     # if there is no best one, return current solution
+    while best_value > sol_val:
+        # go to the best one found
+        solution, seat_to_guest, sol_val = front[best]
+        
+        # remove best solution from front
+        del front[best]
+
+        # then add to the front every neighboring instance
+        # compute the score of every neighboring instance
+        neighs = neighbors(problem, solution, seat_to_guest)
+        for k in neighs.keys():
+            if not k in front.keys():
+                front[k] = neighs[k]
+
+        # get best value in front
+        best = max(front.keys(), key=lambda k: front[k][2])
+        best_value = front[best][2]

@@ -1,7 +1,7 @@
 from table_arrangement import TAProblem
 import string
 import sys
-
+from utility import is_number
 def load_problem(filename):
     if filename[-3:] != ".ta":
         raise NameError("The file is not a .ta file")
@@ -78,7 +78,9 @@ def load_problem(filename):
                 # parse with \t then blank
                 parsed_line = line.split("\t")
                 parsed_line = parsed_line[1].split(" ")
-
+                for i in [0, 1]:
+                    if not is_number(parsed_line[i]):
+                        raise ValueError("Seats should be numbers, got " + parsed_line[i] + " instead")
                 # add edge(first value, second value) to the graph
                 problem.add_edge(parsed_line[0], parsed_line[1])
 

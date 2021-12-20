@@ -1,10 +1,11 @@
 class TAProblem:
     types = ["maxmin", "maxsum"]
-    def __init__(self):
+    def __init__(self, name="TAProblem"):
         self.guests = dict()
         self.topology = dict()
         self.constraints = dict()
         self.function = ""
+        self.name = name
 
     def add_guest(self, name, alias):
         self.guests[alias] = name

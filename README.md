@@ -59,7 +59,7 @@ Example:
 
 #### Defining the topology
 
-By topology, I mean who can talk to who at a given seat. take the following table:
+By topology, I mean who can talk to who at a given seat. For instance, take the following table:
 
                     |    ||          ||
         1   2   3   4   5   6   7
@@ -77,14 +77,14 @@ First, write
 
 somewhere, then you need to list adjacent seats, in the following fashion:
 
-    <seat 1><seat 2>
+        <seat 1><seat 2>
 
 Example, with the previous example with 7:
 
-    7 6
-    7 8
-    7 9
-    7 16
+        7 6
+        7 8
+        7 9
+        7 16
 
 > Note: you do not need to specify both 7 6 and 6 7. You can consider the topology as an undirected graph.
 
@@ -133,4 +133,49 @@ To represent the topology of the previous big table, we would have to write:
         14 15
         15 16
 
-It's a big tedious. Maybe in next versions we'll add more comprehensive ways to define the topology.
+It's a bit tedious. Maybe in next versions we'll add more comprehensive ways to define the topology.
+
+> Note: you can write comments with // comment and with /* comment */.
+> Don't go too crazy with those though, as it is still a beta version.
+
+#### Defining constraints
+
+To each pair guest1 guest2, we want to set a value which is the satisfaction of guest1 if it is next to guest2.
+
+> Note: contrary to the topology, constraints can be seen as a directed valued graph.
+
+Write
+
+    constraints:
+
+somewhere, and then define the value of each pair. For instance, let's say Marc (Ma) loves to talk to Emilie (Em) but absolutely hates Bruce (Bru). We will model his preferences with the following constraints:
+
+        Ma Em 10
+        Ma Bru -50
+
+However, Bruce (Bru) likes to talk to Marc (Ma):
+
+        Bru Ma 5
+
+You can also define constraints on seats. Let's say we have the following table again:
+
+                    |    ||          ||
+        1   2   3   4   5   6   7
+    0
+                                    8
+    10
+        11  12  13  14  15  16  9
+                    |
+
+It appears that there is not much room between seat 5 and the wall behind it (represented by || here). Bruce (Bru) is a pretty big guy, so it will be very uncomfortable for him to seat at 5. We can represent his preference with a constraint:
+
+        Bru 5 -15
+
+The constraints section thus looks like this:
+
+    constraints:
+        Ma Em 10 // constraint on guest
+        Ma Bru -50
+        Bru Ma 5
+        Bru 5 -15 // constraint on seat
+

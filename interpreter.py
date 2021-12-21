@@ -18,7 +18,7 @@ def load_problem(filename):
             nline += 1
             # while the line begins with \t or \n:
             while line:
-                if len(line) == 0:
+                if len(line) == 0 or line[0] == "\n":
                     line = f.readline()
                     nline += 1
                     continue
@@ -75,7 +75,7 @@ def load_problem(filename):
             # while the line begins by \t or \n:
             while line:
 
-                if len(line) == 0:
+                if len(line) == 0 or line[0] == "\n":
                     line = f.readline()
                     nline += 1
                     continue
@@ -106,12 +106,15 @@ def load_problem(filename):
                     line = f.readline()
                     nline += 1
                     continue
-                if len(line) == 0:
+                if len(line) == 0 or line[0] == "\n":
                     line = f.readline()
                     nline += 1
                     continue
 
                 if line[:4] != " "*4:
+                    print("[115] Exit of constraints on line", nline)
+                    print(len(line))
+                    print("\"" + line + "\"")
                     break
 
                 # parse with \t then blank
@@ -119,12 +122,15 @@ def load_problem(filename):
                 parsed_line = parsed_line[1].split(" ")
                 # add third value to the key: second value for first value
                 # constraints
+                print("line", nline)
                 guest = parsed_line[0].replace("\n", "")
                 other = parsed_line[1].replace("\n", "")
                 value = float(parsed_line[2].replace("\n", ""))
                 problem.add_constraint(guest, other, value)
                 line = f.readline()
                 nline += 1
+            print("[129] Exit of constraints on line", nline)
+
         # if it begins with problem:
         elif line[:len("problem:")] == "problem:":
             line = f.readline()

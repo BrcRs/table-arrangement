@@ -179,3 +179,50 @@ The constraints section thus looks like this:
         Bru Ma 5
         Bru 5 -15 // constraint on seat
 
+#### Defining the function to optimize
+
+For now, you can evaluate a solution with two functions: the maxmin function and the maxsum function.
+
+The maxmin function gives to a solution the minimum value of all guests as a quality value. The solver will try to find a solution in which the guest having the worst value has the best value possible (equity principle).
+
+The maxsum function gives to a solution the sum of all guests' values as a quality value. The solver will try to maximize the average value of the guests, which can lead to having some guests neglicted for the common good.
+
+To choose a function, write:
+
+    problem:
+        maxmin
+
+or
+
+    problem:
+        maxsum
+
+### Solve your problem
+
+If your problem is well defined in your problem file, you can now ask the solver to solve it and give you a solution.
+
+Two solving methods are available: the swap method and the bruteforce method.
+
+The swap method begins by creating a random solution. Then it generates all neighboring solutions by swapping two adjacent guests. It keeps doing this until the value of the solution can't be increased. The swap method can reach local optima, so the returned solution is not always the optimum.
+
+The bruteforce solution computes every permutation possible and takes the one with the maximum score. It is **really** slow and is used to test the swap method on small instances. The solution is always the optimum.
+
+To solve your problem, write the following command in the terminal:
+
+    python solver.py <my-problem-file>.ta
+
+The program will first solve it with the swap method, then with the brute force method (for comparison). To skip the bruteforce method, just comment the relevant part in the main function of solver.py.
+
+In the terminal, you will get something like this:
+
+    python .\solver.py .\example2.ta
+    Swap method
+    {'a': {'seat': '3', 'value': 0.0}, 'b': {'seat': '1', 'value': 5.0}, 'c': {'seat': '5', 'value': 4.0}, 'd': {'seat': '4', 'value': 5.0}, 'e': {'seat': '2', 'value': 0}, 'f': {'seat': '0', 'value': 0}, 'g': 
+    {'seat': '6', 'value': 0}, 'h': {'seat': '7', 'value': 0}}
+    0.0
+    Brute force
+    {'a': {'seat': '0', 'value': 4.0}, 'b': {'seat': '1', 'value': 5.0}, 'c': {'seat': '3', 'value': 4.0}, 'd': {'seat': '4', 'value': 5.0}, 'e': {'seat': '2', 'value': 0}, 'f': {'seat': '5', 'value': 0}, 'g': 
+    {'seat': '6', 'value': 0}, 'h': {'seat': '7', 'value': 0}}
+    0
+
+For each method, it gives you the name, then a dictionary mapping to each guest its seat and its satisfaction score at the given seat. Under that, it gives you the score of the solution found.

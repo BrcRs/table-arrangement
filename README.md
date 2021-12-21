@@ -2,9 +2,9 @@
 
 ## Introduction
 
-So last birthday party I attended, I was given the task to place guests to their seats around the table. This is quite a difficult task as you need to make sur everyone will have a good time during the party, which mainly depends on who they are seated next to. I thought "Why not make a solver for that problem so I won't have this issue ever again?". And here we are.
+At the last birthday party I attended, I was given the task to place guests to their seats around the table. This is quite a difficult task as you need to make sure everyone will have a good time during the party, which mainly depends on who they are seated next to. I thought "Why not make a solver for that problem so I won't have this issue ever again?". And here we are.
 
-## What is it
+## What it is
 
 This project allows you to define your own table arrangement problem thanks to an easy model format. The solver can then give you the optimal placement of your guests given the constraints you wrote in your problem definition file (extension .ta).
 
@@ -42,6 +42,7 @@ Then, you need to give your guests nicknames and names as follows:
     <four spaces or one tab><Nickname> <Name>
 
 Example:
+
     guests:
         Bru Bruce
         Ma Marc
@@ -50,6 +51,7 @@ Example:
 You can also ommit the name:
 
 Example:
+
     guests:
         Bru
         Ma

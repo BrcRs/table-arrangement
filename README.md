@@ -61,13 +61,11 @@ Example:
 
 By topology, I mean who can talk to who at a given seat. For instance, take the following table:
 
-                    |    ||          ||
         1   2   3   4   5   6   7
     0
                                     8
     10
         11  12  13  14  15  16  9
-                    |
 
 Each seat is given a number. From the seat 7, we can imagine that we can talk to 6, to 8, to 9 and to 16. However, it will be hard to talk to someone at seat 10, because they're so far away! This is what we want to define in the topology.
 
@@ -77,9 +75,9 @@ First, write
 
 somewhere, then you need to list adjacent seats, in the following fashion:
 
-        <seat 1><seat 2>
+        <seat 1> <seat 2>
 
-Example, with the previous example with 7:
+Example for 7:
 
         7 6
         7 8
@@ -159,15 +157,14 @@ However, Bruce (Bru) likes to talk to Marc (Ma):
 
 You can also define constraints on seats. Let's say we have the following table again:
 
-                    |    ||          ||
+                     ######
         1   2   3   4   5   6   7
     0
                                     8
     10
         11  12  13  14  15  16  9
-                    |
 
-It appears that there is not much room between seat 5 and the wall behind it (represented by || here). Bruce (Bru) is a pretty big guy, so it will be very uncomfortable for him to seat at 5. We can represent his preference with a constraint:
+It appears that there is not much room between seat 5 and the wall behind it (represented by ### here). Bruce (Bru) is a pretty big guy, so it will be very uncomfortable for him to seat at 5. We can represent his preference with a constraint:
 
         Bru 5 -15
 

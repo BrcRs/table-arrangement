@@ -56,3 +56,81 @@ Example:
         Bru
         Ma
         Em
+
+#### Defining the topology
+
+By topology, I mean who can talk to who at a given seat. take the following table:
+
+                    |    ||          ||
+        1   2   3   4   5   6   7
+    0
+                                    8
+    10
+        11  12  13  14  15  16  9
+                    |
+
+Each seat is given a number. From the seat 7, we can imagine that we can talk to 6, to 8, to 9 and to 16. However, it will be hard to talk to someone at seat 10, because they're so far away! This is what we want to define in the topology.
+
+First, write
+
+    topology:
+
+somewhere, then you need to list adjacent seats, in the following fashion:
+
+    <seat 1><seat 2>
+
+Example, with the previous example with 7:
+
+    7 6
+    7 8
+    7 9
+    7 16
+
+> Note: you do not need to specify both 7 6 and 6 7. You can consider the topology as an undirected graph.
+
+To represent the topology of the previous big table, we would have to write:
+
+    topology: // Unoriented graph
+        0 1
+        0 2
+        0 10
+        0 11
+        1 2
+        1 10
+        1 11
+        1 12
+        2 3
+        2 11
+        2 12
+        2 13
+        3 4
+        3 12
+        3 13
+        3 14
+        4 5
+        4 13
+        4 14
+        4 15
+        5 6
+        5 14
+        5 15
+        5 16
+        6 7
+        6 8
+        6 9
+        6 15
+        6 16
+        7 8
+        7 9
+        7 16
+        8 9
+        8 16
+        9 16
+        10 11
+        11 12
+        12 13
+        13 14
+        14 15
+        15 16
+
+It's a big tedious. Maybe in next versions we'll add more comprehensive ways to define the topology.

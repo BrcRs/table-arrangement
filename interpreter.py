@@ -125,8 +125,16 @@ def load_problem(filename):
                 print("line", nline)
                 guest = parsed_line[0].replace("\n", "")
                 other = parsed_line[1].replace("\n", "")
-                value = float(parsed_line[2].replace("\n", ""))
-                problem.add_constraint(guest, other, value)
+
+
+                value = parsed_line[2].replace("\n", "")
+                if value in ['N', 'Y']:
+                    problem.add_absolute_constraint(guest, other, value)
+                else:
+                    value = float(parsed_line[2].replace("\n", ""))
+                    problem.add_constraint(guest, other, value)
+
+
                 line = f.readline()
                 nline += 1
             print("[129] Exit of constraints on line", nline)

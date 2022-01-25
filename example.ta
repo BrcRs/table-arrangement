@@ -39,6 +39,8 @@ constraints: // Oriented valuations
     D 5 2
     Ma L 1
     Ro Mo 1
+    Ro L N
+    Em Ro Y
 
 problem:
     maxmin // or maxsum

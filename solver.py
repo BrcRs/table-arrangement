@@ -34,6 +34,34 @@ def eval_guest(problem, solution, seat_to_guest, g):
             solution[g]["value"] += problem.constraints[g][c]
         assert (type(solution[g]["value"]) != type(None))
     # print("\tvalue updated for", g, "to", solution[g]["value"], file=open(problem.name + ".log", "a"))
+
+def is_feasible(problem, solution):
+    for g in solution.keys():
+        for o in problem.abs_constraints[g].keys():
+            # o is a seat
+            if is_number(o):
+                if problem.abs_constraints[g][o] == 'N':
+                    if solution[g]['seat'] == int(o):
+                        # Constraint violated
+                        return False
+                elif problem.abs_constraints[g][o] == 'Y':
+                    if solution[g]['seat'] != int(o):
+                        # Constraint violated
+                        return False
+            # o is a guest
+            else:
+                # get neighbors' seats
+                neigh_seats = problem.topology[solution[g]['seat']]
+
+                # get neigbors
+                neigh = [k for k in solution.keys() if solution[k]['seat'] in neigh_seats]
+                if problem.abs_constraints[g][o] == 'N':
+                    if o in neigh:
+                        return False
+                elif problem.abs_constraints[g][o] == 'Y':
+                    if o not in neigh:
+                        return False
+    return True
 def eval(problem, solution):
     # print("Evaluating the solution", solution, file=open(problem.name + ".log", "a"))
     # print("Function:", problem.function, file=open(problem.name + ".log", "a"))
@@ -98,7 +126,8 @@ def neighbors(problem, solution, seat_to_guest):
             swap(problem, g, g2, sol_copy, s_to_g_copy)
             # add the couple to neighs and the value (if not in already!)
             sol_id = encode_solution(sol_copy)
-            neighs[sol_id] = (sol_copy, s_to_g_copy, full_eval(problem, sol_copy))
+            if is_feasible(problem, sol_copy):
+                neighs[sol_id] = (sol_copy, s_to_g_copy, full_eval(problem, sol_copy))
     return neighs
 
 def solve(problem, logfile="swap.log"):
@@ -172,16 +201,16 @@ def solve_bruteforce(problem, logfile="bruteforce.log"):
             solution[a] = {"seat" : bunch_of_seats[i]}
             seat_to_guest[bunch_of_seats[i]] = a
             i += 1
+        if is_feasible(problem, solution):
+            # compute values of guests
+            for g in problem.guests.keys():
+                eval_guest(problem, solution, seat_to_guest, g)
 
-        # compute values of guests
-        for g in problem.guests.keys():
-            eval_guest(problem, solution, seat_to_guest, g)
-
-        # compute value of solution
-        sol_val = eval(problem, solution)
-        if best_val == None or sol_val > best_val:
-            best_val = sol_val
-            best = copy_dict(solution)
+            # compute value of solution
+            sol_val = eval(problem, solution)
+            if best_val == None or sol_val > best_val:
+                best_val = sol_val
+                best = copy_dict(solution)
 
     return best, best_val
 

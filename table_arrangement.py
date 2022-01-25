@@ -4,12 +4,14 @@ class TAProblem:
         self.guests = dict()
         self.topology = dict()
         self.constraints = dict()
+        self.abs_constraints = dict()
         self.function = ""
         self.name = name
 
     def add_guest(self, name, alias):
         self.guests[alias] = name
         self.constraints[alias] = dict()
+        self.abs_constraints[alias] = dict()
 
     def add_guests(self, aliases: dict):
         for a in aliases.keys():
@@ -28,6 +30,9 @@ class TAProblem:
     def add_constraint(self, guest, other, value):
         # other could be a seat or a guest
         self.constraints[guest][other] = value
+    
+    def add_absolute_constraint(self, guest, other, value):
+        self.abs_constraints[guest][other] = value
 
     def set_opt_function(self, fun):
         self.function = fun

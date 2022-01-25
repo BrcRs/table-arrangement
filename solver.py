@@ -146,6 +146,15 @@ def solve(problem, logfile="swap.log"):
         solution[a] = {"seat" : seats[i]}
         seat_to_guest[seats[i]] = a
         i += 1
+    while not is_feasible(problem, solution):
+        solution = dict()
+        seat_to_guest = dict()
+        shuffle(seats)
+        i = 0
+        for a in problem.guests.keys():
+            solution[a] = {"seat" : seats[i]}
+            seat_to_guest[seats[i]] = a
+            i += 1
 
     # compute values of guests
     # print("initial value computing", file=open(logfile, "a"))
@@ -162,6 +171,8 @@ def solve(problem, logfile="swap.log"):
     # init done, start loop
 
     # get best value in neighbors
+    if len(front) == 0:
+        return solution, sol_val
     best = max(front.keys(), key=lambda k: front[k][2])
     best_value = front[best][2]
     # print("best value found in front:", best_value, file=open(logfile, "a"))

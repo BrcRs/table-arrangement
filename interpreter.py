@@ -157,7 +157,7 @@ def load_problem(filename):
 
                 # parse with \t then blank
                 parsed_line = line.split(" "*4)
-                parsed_line = parsed_line[1].split(" ")
+                parsed_line = parsed_line[1].replace("\n", "").split(" ")
                 if not parsed_line[0] in TAProblem.types:
                     raise ValueError("Unknown problem type: " + parsed_line[0])
                 problem.set_opt_function(parsed_line[0])

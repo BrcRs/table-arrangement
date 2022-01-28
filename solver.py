@@ -41,11 +41,11 @@ def is_feasible(problem, solution):
             # o is a seat
             if is_number(o):
                 if problem.abs_constraints[g][o] == 'N':
-                    if solution[g]['seat'] == int(o):
+                    if solution[g]['seat'] == o:
                         # Constraint violated
                         return False
                 elif problem.abs_constraints[g][o] == 'Y':
-                    if solution[g]['seat'] != int(o):
+                    if solution[g]['seat'] != o:
                         # Constraint violated
                         return False
             # o is a guest
@@ -131,6 +131,7 @@ def neighbors(problem, solution, seat_to_guest):
     return neighs
 
 def solve(problem, logfile="swap.log"):
+    nb_iter = 0
     # f = open(logfile, 'w')
     # print("", file=f)
     # f.close()
@@ -178,6 +179,7 @@ def solve(problem, logfile="swap.log"):
     # print("best value found in front:", best_value, file=open(logfile, "a"))
     # if there is no best one, return current solution
     while best_value > sol_val:
+        nb_iter += 1
         # print("best value is better, exploring new node", file=open(logfile, "a"))
         # go to the best one found
         solution, seat_to_guest, sol_val = front[best]
@@ -196,7 +198,7 @@ def solve(problem, logfile="swap.log"):
         best = max(front.keys(), key=lambda k: front[k][2])
         best_value = front[best][2]
         # print("best value found in front:", best_value, file=open(logfile, "a"))
-
+    print("Done in", nb_iter, "iteration(s)")
     return solution, sol_val
 
 def solve_bruteforce(problem, logfile="bruteforce.log"):
